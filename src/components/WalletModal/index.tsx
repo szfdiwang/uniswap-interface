@@ -1,6 +1,7 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+// import { WalletConnectConnector } from '../../alaya/js/connectAlaya'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactGA from 'react-ga'
@@ -204,7 +205,7 @@ export default function WalletModal({
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
-    const isMetamask = window.ethereum && window.ethereum.isMetaMask
+    const isMetamask = window.alaya && window.alaya.isMetaMask
     return Object.keys(SUPPORTED_WALLETS).map(key => {
       const option = SUPPORTED_WALLETS[key]
       // check for mobile options
@@ -214,7 +215,7 @@ export default function WalletModal({
           return null
         }
 
-        if (!window.web3 && !window.ethereum && option.mobile) {
+        if (!window.web3a && !window.alaya && option.mobile) {
           return (
             <Option
               onClick={() => {
@@ -237,14 +238,15 @@ export default function WalletModal({
       // overwrite injected when needed
       if (option.connector === injected) {
         // don't show injected if there's no injected provider
-        if (!(window.web3 || window.ethereum)) {
-          if (option.name === 'MetaMask') {
+        // 当前如果检查不到alaya需要安装
+        if (!(window.web3a || window.alaya)) {
+          if (option.name === 'Injected') {
             return (
               <Option
                 id={`connect-${key}`}
                 key={key}
                 color={'#E8831D'}
-                header={'Install Metamask'}
+                header={'Install Alaya'}
                 subheader={null}
                 link={'https://metamask.io/'}
                 icon={MetamaskIcon}
@@ -259,9 +261,9 @@ export default function WalletModal({
           return null
         }
         // likewise for generic
-        else if (option.name === 'Injected' && isMetamask) {
-          return null
-        }
+        // else if (option.name === 'Injected' && isMetamask) {
+        //   return null
+        // }
       }
 
       // return rest of options
@@ -298,10 +300,10 @@ export default function WalletModal({
           <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</HeaderRow>
           <ContentWrapper>
             {error instanceof UnsupportedChainIdError ? (
-              <h5>Please connect to the appropriate Ethereum network.</h5>
+              <h5>Please connect to the appropriate Alaya network.</h5>
             ) : (
-              'Error connecting. Try refreshing the page.'
-            )}
+                'Error connecting. Try refreshing the page.'
+              )}
           </ContentWrapper>
         </UpperSection>
       )
@@ -334,10 +336,10 @@ export default function WalletModal({
             </HoverText>
           </HeaderRow>
         ) : (
-          <HeaderRow>
-            <HoverText>Connect to a wallet</HoverText>
-          </HeaderRow>
-        )}
+            <HeaderRow>
+              <HoverText>Connect to a wallet</HoverText>
+            </HeaderRow>
+          )}
         <ContentWrapper>
           {walletView === WALLET_VIEWS.PENDING ? (
             <PendingView
@@ -347,12 +349,12 @@ export default function WalletModal({
               tryActivation={tryActivation}
             />
           ) : (
-            <OptionGrid>{getOptions()}</OptionGrid>
-          )}
+              <OptionGrid>{getOptions()}</OptionGrid>
+            )}
           {walletView !== WALLET_VIEWS.PENDING && (
             <Blurb>
-              <span>New to Ethereum? &nbsp;</span>{' '}
-              <ExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</ExternalLink>
+              <span>New to Alaya? &nbsp;</span>{' '}
+              <ExternalLink href="https://Alaya.org/wallets/">Learn more about wallets</ExternalLink>
             </Blurb>
           )}
         </ContentWrapper>

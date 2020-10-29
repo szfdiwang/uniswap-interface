@@ -7,12 +7,12 @@ declare module 'jazzicon' {
 declare module 'fortmatic'
 
 interface Window {
-  ethereum?: {
+  alaya?: {
     isMetaMask?: true
     on?: (...args: any[]) => void
     removeListener?: (...args: any[]) => void
   }
-  web3?: {}
+  web3a?: {}
 }
 
 declare module 'content-hash' {
